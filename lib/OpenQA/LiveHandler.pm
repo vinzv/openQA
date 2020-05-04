@@ -39,10 +39,11 @@ sub startup {
     return if $ENV{MOJO_HELP};
     OpenQA::Setup::read_config($self);
     setup_log($self);
-    OpenQA::Setup::setup_mojo_tmpdir();
     OpenQA::Setup::add_build_tx_time_header($self);
 
-    OpenQA::Setup::load_plugins($self, undef, no_arbitrary_plugins => 1);
+    $self->plugin('OpenQA::WebAPI::Plugin::Helpers');
+    $self->plugin('OpenQA::WebAPI::Plugin::CSRF');
+
     OpenQA::Setup::set_secure_flag_on_cookies_of_https_connection($self);
 
     # register root routes: use same paths as the regular web UI but prefix everything with /liveviewhandler
